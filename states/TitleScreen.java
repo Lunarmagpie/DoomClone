@@ -1,5 +1,6 @@
 package states;
+import core.State;
 
-public class TitleScreen {
+public class TitleScreen extends State {
     
 }

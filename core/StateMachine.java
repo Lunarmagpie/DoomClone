@@ -6,4 +6,8 @@ package core;
 
 public class StateMachine {
     
+    public void tick(){
+
+    }
+
 }

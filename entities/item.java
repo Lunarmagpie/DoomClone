@@ -1,5 +1,7 @@
 package entities;
 
-public class item {
+import core.entity;
+
+public class item extends entity {
     
 }

@@ -1,5 +1,6 @@
 package states;
+import core.State;
 
-public class Stage {
+public class Stage extends State {
     
 }

@@ -1,5 +1,9 @@
 package core;
 
-public class State {
+public abstract class State {
+    
+    public abstract void tick(double delta);
+
+    public abstract void render(double delta);
     
 }
