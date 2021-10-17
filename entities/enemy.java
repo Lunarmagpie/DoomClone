@@ -1,7 +1,7 @@
 package entities;
 
-import core.entity;
+import core.Entity;
 
-public class enemy extends entity {
+public class enemy extends Entity {
     
 }
