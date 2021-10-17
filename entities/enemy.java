@@ -1,6 +1,6 @@
 package entities;
 
-import entities.entity;
+import core.entity;
 
 public class enemy extends entity {
     

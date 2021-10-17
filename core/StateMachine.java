@@ -5,9 +5,29 @@
 package core;
 
 public class StateMachine {
-    
-    public void tick(){
+
+    protected float framerate;
+
+    public StateMachine(float framerate){
+        this.framerate = framerate;
+    }
+
+    public void run(){
+        long delta = (long) ((1/framerate)*1000);
+
+        try {
+            while (true) {
+                tick(delta);
+                Thread.sleep(delta);
+            }
+        }catch(InterruptedException e){
+            System.out.println("Game crashed");
+        }
 
     }
 
+    public void tick(float delta){
+        // Runs the game
+        System.out.println(delta);
+    }
 }
