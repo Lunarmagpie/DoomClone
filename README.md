@@ -1,1 +1,1 @@
-# DoomClone
+# Touhou Sosetsu 〜 Unstable Scarlet Library
