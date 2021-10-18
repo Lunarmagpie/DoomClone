@@ -9,7 +9,7 @@ A state is a "state" of the program. For example the title screen and game loop 
 Levels will be 2d stages that are rendered in 3d by the Stage state. The game will only have 1 level.
 
 ### Player
-The player is going to work like a character is a 2d game. The player will only have an X & Y. The coordinate system we are using for the map data and player position is Cartesian coordinates
+The player is going to work like a character is a 2d game. The player will only have an X & Y. The coordinate system we are using for the map data and player position is Cartesian coordinates.
 
 ### Entities
 Entities are anything that are rendered as 2d sprites & not walls (ex. Enemies and pickups). Entities will only have an X & Y coordnate like the player. They will be rendered as an image on the player's screen, and will always face the player.
