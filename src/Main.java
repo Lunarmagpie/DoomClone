@@ -1,8 +1,8 @@
-import core.StateMachine;
+import core.GameLoop;
 
 class Main{
     public static void main(String[] args) {
-        StateMachine stateMachine = new StateMachine(60);
-        stateMachine.run();
+        GameLoop GameLoop = new GameLoop(60);
+        GameLoop.run();
     }
 }

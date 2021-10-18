@@ -4,11 +4,11 @@
 
 package core;
 
-public class StateMachine {
+public class GameLoop {
 
     protected float framerate;
 
-    public StateMachine(float framerate){
+    public GameLoop(float framerate){
         this.framerate = framerate;
     }
 
