@@ -4,12 +4,26 @@
 
 package core;
 
+import java.awt.*; 
+import javax.swing.*;
+
 public class GameLoop {
 
+    private JFrame frame;
     protected float framerate;
 
     public GameLoop(float framerate){
         this.framerate = framerate;
+        createFrame("Game");
+    }
+
+    public GameLoop(float framerate, String windowName){
+        this.framerate = framerate;
+        createFrame(windowName);
+    }
+
+    private void createFrame(String name) {
+        MyFrame window = new MyFrame();
     }
 
     public void run(){

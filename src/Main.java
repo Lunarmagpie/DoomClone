@@ -1,8 +1,10 @@
-import core.GameLoop;
+import core.*;
+import java.awt.*; 
+import javax.swing.*;
 
 class Main{
     public static void main(String[] args) {
-        GameLoop GameLoop = new GameLoop(60);
-        GameLoop.run();
+        GameLoop loop = new GameLoop(60);
+        loop.run();
     }
 }
