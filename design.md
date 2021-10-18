@@ -12,4 +12,4 @@ Levels will be 2d stages that are rendered in 3d by the Stage state.
 The player is going to work like a character is a 2d game. The player will only have an X & Y.
 
 ## Entities
-Entities will only have an X & Y coordnate like the player. They will be rendered as an image on the player's screen,
+Entities are anything that isn't part of the walls. ex Enemies and pickups. Entities will only have an X & Y coordnate like the player. They will be rendered as an image on the player's screen,
