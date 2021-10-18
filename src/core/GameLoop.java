@@ -9,8 +9,8 @@ import javax.swing.*;
 
 public class GameLoop {
 
-    private JFrame frame;
-    protected float framerate;
+    private float framerate;
+    private Frame frame;
 
     public GameLoop(float framerate){
         this.framerate = framerate;
@@ -23,7 +23,7 @@ public class GameLoop {
     }
 
     private void createFrame(String name) {
-        new Frame();
+        frame = new Frame();
     }
 
     public void run(){
@@ -42,6 +42,6 @@ public class GameLoop {
 
     public void tick(float delta){
         // Runs the game
-
+        frame.repaint();
     }
 }
