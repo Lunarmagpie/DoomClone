@@ -1,5 +1,5 @@
 package states;
 
-public class TitleScreen extends State {
+public class TitleScreen extends StateABC {
     
 }

@@ -1,5 +1,5 @@
 package stages;
 
-public class TestStage {
+public class TestStage extends LevelABC {
     
 }

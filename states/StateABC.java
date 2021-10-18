@@ -1,6 +1,6 @@
 package states;
 
-public abstract class State {
+public abstract class StateABC {
     
     public abstract void tick(double delta);
 

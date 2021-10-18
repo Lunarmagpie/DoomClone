@@ -1,5 +1,5 @@
 package states;
 
-public class Level extends State {
+public class Level extends StateABC {
     
 }
