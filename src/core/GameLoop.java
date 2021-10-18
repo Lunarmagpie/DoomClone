@@ -23,7 +23,7 @@ public class GameLoop {
     }
 
     private void createFrame(String name) {
-        MyFrame window = new MyFrame();
+        new Frame();
     }
 
     public void run(){
