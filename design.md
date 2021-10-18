@@ -6,7 +6,7 @@ The StateMachine object controls the flow of the program. It will handle running
 A state is a "state" of the program. For example the title screen and game loop are their own states.
 
 ## Levels
-Levels will be 2d stages that are rendered in 3d by the Stage state.
+Levels will be 2d stages that are rendered in 3d by the Stage state. Map data is a 2d array. 0 will be walkable areas, any other number is a type of wall.
 
 ## Player
 The player is going to work like a character is a 2d game. The player will only have an X & Y.
