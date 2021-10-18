@@ -28,6 +28,6 @@ public class StateMachine {
 
     public void tick(float delta){
         // Runs the game
-        System.out.println(delta);
+
     }
 }
