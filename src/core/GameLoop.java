@@ -4,6 +4,7 @@
 
 package core;
 
+import player.*;
 import java.awt.*; 
 import javax.swing.*;
 
@@ -42,6 +43,8 @@ public class GameLoop {
 
     public void tick(float delta){
         // Runs the game
+
+        // Redraw frame
         frame.repaint();
     }
 }

@@ -4,11 +4,11 @@ import javax.swing.*;
 
 public class Frame extends JFrame{
  
- Panel panel;
+ Render2D panel;
  
  Frame(){
   
-  panel = new Panel();
+  panel = new Render2D();
   
   this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   
