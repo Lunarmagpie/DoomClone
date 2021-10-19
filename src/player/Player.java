@@ -1,5 +1,9 @@
 package player;
 
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.BasicStroke;
+
 public class Player {
 
     double x;
@@ -25,5 +29,12 @@ public class Player {
 
     public void rotate(double angle){
         this.r += angle;
+    }
+
+    public void render(Graphics2D g2D, double delta){
+        g2D.setPaint(Color.BLACK);
+        g2D.setStroke(new BasicStroke(5));
+
+        g2D.drawRect((int) x,(int) y,10,10);
     }
 }

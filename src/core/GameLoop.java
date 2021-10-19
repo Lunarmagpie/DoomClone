@@ -4,17 +4,29 @@
 
 package core;
 
-import player.*;
+import states.StateABC;
+
 import java.awt.*; 
 import javax.swing.*;
+
+import player.Player;
 
 public class GameLoop {
 
     private float framerate;
     private Frame frame;
+    private StateABC currentState;
+
+    private float lastDelta = 0;
 
     public GameLoop(float framerate){
         this.framerate = framerate;
+        createFrame("Game");
+    }
+
+    public GameLoop(float framerate, StateABC state){
+        this.framerate = framerate;
+        this.currentState = state;
         createFrame("Game");
     }
 
@@ -24,7 +36,7 @@ public class GameLoop {
     }
 
     private void createFrame(String name) {
-        frame = new Frame();
+        frame = new Frame(this);
     }
 
     public void run(){
@@ -43,8 +55,15 @@ public class GameLoop {
 
     public void tick(float delta){
         // Runs the game
+        currentState.tick(delta);
 
+
+        this.lastDelta = delta;
         // Redraw frame
         frame.repaint();
+    }
+
+    public void render(Graphics2D g2D){
+        this.currentState.render(g2D, this.lastDelta);
     }
 }
