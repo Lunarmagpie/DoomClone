@@ -1,16 +1,29 @@
 package player;
 
 public class Player {
-    int x;
-    int y;
+
+    double x;
+    double y;
+    double r; // Rotation
 
     public Player() {
-        x = 0;
-        y = 0;
+        this.x = 0;
+        this.y = 0;
+        this.r = 0;
     }
 
-    public void moveRight()  { x += 10; }
-    public void moveLeft()   { x -= 10; }
-    public void moveUp()     { y += 10; }
-    public void moveDown()   { y -= 10; }
+    public void move_forward(double distance){
+        this.move(distance, this.r);
+    }
+
+    public void move(double distance, double dir){
+        double rotate = Math.PI/2;
+
+        this.x += Math.sin(dir + rotate) * distance;
+        this.y += Math.cos(dir + rotate) * distance;
+    }
+
+    public void rotate(double angle){
+        this.r += angle;
+    }
 }
