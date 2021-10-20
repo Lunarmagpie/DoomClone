@@ -6,17 +6,26 @@ import javax.swing.*;
 public class Render2D extends JPanel{
 
     int x = 0;
-    GameLoop game;
 
-    Render2D(GameLoop game){
+    public Render2D(){
         this.setPreferredSize(new Dimension(180,135));
-        this.game = game;
     }
 
     public void paint(Graphics g) {
+        System.out.println("here");
+
         Graphics2D g2D = (Graphics2D) g;
 
-        this.game.render(g2D);
+        g2D.setPaint(Color.BLACK);
+        g2D.setStroke(new BasicStroke(5));
+
+        for (int i = 0; i < 200; i++) {
+            g2D.drawRect(0 + x, i, 10, 10);
+        }
+
+        x += 1;
+        if (x > 180)
+            x = 0;
     }
 
 }
