@@ -12,8 +12,6 @@ public class Render2D extends JPanel{
     }
 
     public void paint(Graphics g) {
-        System.out.println("here");
-
         Graphics2D g2D = (Graphics2D) g;
 
         g2D.setPaint(Color.BLACK);

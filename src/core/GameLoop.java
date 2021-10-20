@@ -54,7 +54,7 @@ public class GameLoop {
     }
 
     public void changeState(StateABC state) {
-        frame.removeAll();
+        // frame.removeAll();
         currentState = state;
         currentState.renderInit(frame);
     }

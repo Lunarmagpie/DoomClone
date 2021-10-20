@@ -13,6 +13,7 @@ import core.Render2D;
 public class Stage extends StateABC {
 
     player.Player player;
+    Render2D panel;
     int x = 0;
 
     public Stage() {
@@ -24,8 +25,11 @@ public class Stage extends StateABC {
     }
 
     public void renderInit(JFrame frame){
-        Render2D panel = new Render2D();
+        panel = new Render2D();
+        panel.setPreferredSize(new Dimension(180, 135));
+
         frame.add(panel);
+        frame.pack();
     }
 
     public void render() {
