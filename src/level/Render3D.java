@@ -13,7 +13,6 @@ public class Render3D extends JPanel {
 
     int screenWidth = 500;
     double planeX = 0, planeY = 0.66;
-    double dirX = -1, dirY = 0;
     double time = 0;
     double oldTime = 0;
 
@@ -22,11 +21,7 @@ public class Render3D extends JPanel {
 
     }
 
-    public void rotate(double theta){
-        double oldDirX = dirX;
-        dirX = dirX * Math.cos(theta) - dirY * Math.sin(theta);
-        dirY = oldDirX * Math.sin(theta) + dirY * Math.cos(theta);
-
+    public void rotate(double theta) {
         double oldPlaneX = planeX;
         planeX = planeX * Math.cos(theta) - planeY * Math.sin(theta);
         planeY = oldPlaneX * Math.sin(theta) + planeY * Math.cos(theta);
@@ -48,7 +43,12 @@ public class Render3D extends JPanel {
         double posX = this.stage.player.x;
         double posY = this.stage.player.y;
 
+        // Player
+        double dirX = this.stage.player.rx;
+        double dirY = this.stage.player.ry;
+
         for (int x = 0; x < screenWidth; x++) {
+
             double cameraX = 2 * x / (double) screenWidth - 1; // x-coordinate in camera space
             double rayDirX = dirX + planeX * cameraX;
             double rayDirY = dirY + planeY * cameraX;
@@ -120,8 +120,8 @@ public class Render3D extends JPanel {
             if (drawEnd >= h)
                 drawEnd = h - 1;
 
-                g2D.setPaint(Color.gray);
-            if (side == 1){
+            g2D.setPaint(Color.gray);
+            if (side == 1) {
                 g2D.setPaint(Color.lightGray);
             }
 

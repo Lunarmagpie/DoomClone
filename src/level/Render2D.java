@@ -39,7 +39,7 @@ public class Render2D extends JPanel {
 
         int px = (int) this.player.x;
         int py = (int) this.player.y;
-        double pr = this.player.r - Math.PI;
+        double pr = Math.atan2(this.player.ry, this.player.rx);
         int[] playerX = { px, px + 10, px + 10, px };
         int[] playerY = { py, py, py + 10, py + 10 };
 
