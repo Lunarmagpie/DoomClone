@@ -6,11 +6,13 @@ import level.Render2D;
 import level.Render3D;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.awt.Color;
 
 public class Stage extends StateABC {
 
     public player.Player player;
     Render2D panel;
+    Render2D minimap;
     Render3D panel3D;
     int x = 0;
 
@@ -74,14 +76,15 @@ public class Stage extends StateABC {
     }
 
     public void renderInit(JFrame frame){
-        // panel = new Render2D(this);
-        // panel.setPreferredSize(new Dimension(180, 135));
-        // frame.add(panel);
-        // frame.pack();
+        minimap = new Render2D(this);
+        minimap.setSize(0, 0);
         
         panel3D = new Render3D(this);
-        panel3D.setPreferredSize(new Dimension(100, 100));
+        // panel3D.setPreferredSize(new Dimension(100, 100));
+        
         frame.add(panel3D);
+        //frame.add(minimap);
+
         frame.pack();
     }
 
