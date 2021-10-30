@@ -10,31 +10,43 @@ public class Player {
 
     public double x;
     public double y;
-    public double rx; // Rotation
-    public double ry;
+    public double rx = -1;
+    public double ry = 0;
     public Stage stage;
 
     public Player(Stage stage) {
         this.x = 22;
         this.y = 12;
+
         this.rx = -1;
         this.ry = 0;
 
         this.stage = stage;
     }
 
-    public void move(double distance, double dir){
+    public void move(double distance, double angle){
+
+        if (distance == 0){
+            return;
+        }
 
 
-        this.x += rx * distance;
-        this.y += ry * distance;
+        double movrx = rx * Math.cos(angle) - ry * Math.sin(angle);
+        double movry = rx * Math.sin(angle) + ry * Math.cos(angle);
 
-        // for (int[] wall : stage.walls) {
-        //     if (this.x > wall[0] - 9 && this.x < wall[0] + 10 && this.y > wall[1] - 9 && this.y < wall[1] + 10) {
-        //         this.x -= Math.sin(dir + rotate) * distance;
-        //         this.y -= Math.cos(dir + rotate) * distance;
-        //     }
-        // }
+        //Check in in a block
+        int percision = 20;
+        for (int i = 0; i < percision; i++){
+            if (this.stage.walls[(int) (this.x + movrx * distance/percision)][(int) this.y] <= 0){
+                this.x += movrx * distance/percision;
+            }
+
+            //Check in in a block
+            if (this.stage.walls[(int) this.x][(int) (this.y + movry * distance/percision)] <= 0){
+                this.y += movry * distance/percision;
+            }
+        }
+
     }
 
     public void rotate(double angle){
