@@ -26,21 +26,43 @@ public class Player {
 
     public void move(double distance, double angle){
 
+        if (distance == 0){
+            return;
+        }
+
 
         double movrx = rx * Math.cos(angle) - ry * Math.sin(angle);
         double movry = rx * Math.sin(angle) + ry * Math.cos(angle);
 
         this.x += movrx * distance;
         this.y += movry * distance;
+        
+        //Check in in a block
+        if (this.stage.walls[(int) this.x][(int) this.y] > 0){
 
+            // double xDir = Math.signum(distance) * Math.signum(movrx);
+            // double yDir = Math.signum(distance) * Math.signum(movry);
 
+            // double inBlockX = xDir * this.x % 1;
+            // if (inBlockX < 0){
+            //     inBlockX = -1 - inBlockX;
+            // }
 
-        // for (int[] wall : stage.walls) {
-        //     if (this.x > wall[0] - 9 && this.x < wall[0] + 10 && this.y > wall[1] - 9 && this.y < wall[1] + 10) {
-        //         this.x -= Math.sin(dir + rotate) * distance;
-        //         this.y -= Math.cos(dir + rotate) * distance;
-        //     }
-        // }
+            // double inBlockY = yDir * this.y % 1;
+            // if (inBlockY < 0){
+            //     inBlockY = -1 - inBlockY;
+            // }
+
+            // this.x -= inBlockX;
+            // this.y -= inBlockY;
+
+            
+            // Easy collision system
+            this.x -= movrx * distance;
+            this.y -= movry * distance;
+
+        }
+
     }
 
     public void rotate(double angle){

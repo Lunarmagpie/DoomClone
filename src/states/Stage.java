@@ -60,13 +60,13 @@ public class Stage extends StateABC {
         player.move(.004*delta*dir_y, Math.toRadians(0));
 
         if (keysPressed.contains(39)){
-            this.player.rotate(Math.toRadians(-1));
-            this.panel3D.rotate(Math.toRadians(-1));
+            this.player.rotate(Math.toRadians(-2));
+            this.panel3D.rotate(Math.toRadians(-2));
         }
 
         if (keysPressed.contains(37)){
-            this.player.rotate(Math.toRadians(1));
-            this.panel3D.rotate(Math.toRadians(1));
+            this.player.rotate(Math.toRadians(2));
+            this.panel3D.rotate(Math.toRadians(2));
         }
 
 
