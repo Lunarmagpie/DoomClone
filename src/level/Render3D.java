@@ -6,10 +6,12 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import states.Stage;
 import java.awt.Toolkit;
+import level.Render2D;
 
 public class Render3D extends JPanel {
 
     Stage stage;
+    Render2D minimap;
 
     int screenWidth = 500;
     double planeX = 0, planeY = .66;
@@ -18,7 +20,7 @@ public class Render3D extends JPanel {
 
     public Render3D(Stage stage) {
         this.stage = stage;
-
+        minimap = new Render2D(stage);
     }
 
     public void rotate(double theta) {
@@ -128,6 +130,9 @@ public class Render3D extends JPanel {
             g2D.drawLine(x, drawStart, x, drawEnd);
 
         }
+
+        //PAINT MINIMAP
+        minimap.paint(g);
 
     }
 }
