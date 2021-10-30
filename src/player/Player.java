@@ -34,33 +34,17 @@ public class Player {
         double movrx = rx * Math.cos(angle) - ry * Math.sin(angle);
         double movry = rx * Math.sin(angle) + ry * Math.cos(angle);
 
-        this.x += movrx * distance;
-        this.y += movry * distance;
-        
         //Check in in a block
-        if (this.stage.walls[(int) this.x][(int) this.y] > 0){
+        int percision = 20;
+        for (int i = 0; i < percision; i++){
+            if (this.stage.walls[(int) (this.x + movrx * distance/percision)][(int) this.y] <= 0){
+                this.x += movrx * distance/percision;
+            }
 
-            // double xDir = Math.signum(distance) * Math.signum(movrx);
-            // double yDir = Math.signum(distance) * Math.signum(movry);
-
-            // double inBlockX = xDir * this.x % 1;
-            // if (inBlockX < 0){
-            //     inBlockX = -1 - inBlockX;
-            // }
-
-            // double inBlockY = yDir * this.y % 1;
-            // if (inBlockY < 0){
-            //     inBlockY = -1 - inBlockY;
-            // }
-
-            // this.x -= inBlockX;
-            // this.y -= inBlockY;
-
-            
-            // Easy collision system
-            this.x -= movrx * distance;
-            this.y -= movry * distance;
-
+            //Check in in a block
+            if (this.stage.walls[(int) this.x][(int) (this.y + movry * distance/percision)] <= 0){
+                this.y += movry * distance/percision;
+            }
         }
 
     }

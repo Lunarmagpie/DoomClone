@@ -56,8 +56,8 @@ public class Stage extends StateABC {
         int dir_x = (keysPressed.contains(65)? 1:0) - (keysPressed.contains(68)? 1:0);
         int dir_y = (keysPressed.contains(87)? 1:0) - (keysPressed.contains(83)? 1:0);
 
-        player.move(.004*delta*dir_x, Math.toRadians(90));
-        player.move(.004*delta*dir_y, Math.toRadians(0));
+        player.move(.002*delta*dir_x, Math.toRadians(90));
+        player.move(.002*delta*dir_y, Math.toRadians(0));
 
         if (keysPressed.contains(39)){
             this.player.rotate(Math.toRadians(-2));
