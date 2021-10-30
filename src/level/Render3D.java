@@ -13,8 +13,8 @@ public class Render3D extends JPanel {
     Stage stage;
     Render2D minimap;
 
-    int screenWidth = 500;
-    double planeX = 0, planeY = 0.66;
+    int screenWidth;
+    double planeX = 0, planeY = 0.75;
     double time = 0;
     double oldTime = 0;
 
@@ -30,6 +30,8 @@ public class Render3D extends JPanel {
     }
 
     public void paint(Graphics g) {
+        screenWidth = this.getWidth();
+        int h = this.getHeight();
         Toolkit.getDefaultToolkit().sync();
 
         // DRAW RAYS
@@ -110,8 +112,6 @@ public class Render3D extends JPanel {
                 perpWallDist = (sideDistY - deltaDistY);
 
             // Calculate height of line to draw on screen
-            int h = 500;
-
             int lineHeight = (int) (h / perpWallDist);
 
             // calculate lowest and highest pixel to fill in current stripe
