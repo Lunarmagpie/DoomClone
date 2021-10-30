@@ -12,7 +12,7 @@ public class Render3D extends JPanel {
     Stage stage;
 
     int screenWidth = 500;
-    double planeX = 0, planeY = 0.66;
+    double planeX = 0, planeY = .66;
     double time = 0;
     double oldTime = 0;
 
