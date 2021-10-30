@@ -14,8 +14,8 @@ public class Player {
     public Stage stage;
 
     public Player(Stage stage) {
-        this.x = 50;
-        this.y = 100;
+        this.x = 22;
+        this.y = 12;
         this.r = 0;
         this.stage = stage;
     }
@@ -30,12 +30,12 @@ public class Player {
         this.x += Math.sin(dir + rotate) * distance;
         this.y += Math.cos(dir + rotate) * distance;
 
-        for (int[] wall : stage.walls) {
-            if (this.x > wall[0] - 9 && this.x < wall[0] + 10 && this.y > wall[1] - 9 && this.y < wall[1] + 10) {
-                this.x -= Math.sin(dir + rotate) * distance;
-                this.y -= Math.cos(dir + rotate) * distance;
-            }
-        }
+        // for (int[] wall : stage.walls) {
+        //     if (this.x > wall[0] - 9 && this.x < wall[0] + 10 && this.y > wall[1] - 9 && this.y < wall[1] + 10) {
+        //         this.x -= Math.sin(dir + rotate) * distance;
+        //         this.y -= Math.cos(dir + rotate) * distance;
+        //     }
+        // }
     }
 
     public void rotate(double angle){

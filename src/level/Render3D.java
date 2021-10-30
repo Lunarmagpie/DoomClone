@@ -12,12 +12,24 @@ public class Render3D extends JPanel {
     Stage stage;
 
     int screenWidth = 500;
-    int numberOfRays = 100;
-    double fov = 70;
+    double planeX = 0, planeY = 0.66;
+    double dirX = -1, dirY = 0;
+    double time = 0;
+    double oldTime = 0;
 
     public Render3D(Stage stage) {
         this.stage = stage;
 
+    }
+
+    public void rotate(double theta){
+        double oldDirX = dirX;
+        dirX = dirX * Math.cos(theta) - dirY * Math.sin(theta);
+        dirY = oldDirX * Math.sin(theta) + dirY * Math.cos(theta);
+
+        double oldPlaneX = planeX;
+        planeX = planeX * Math.cos(theta) - planeY * Math.sin(theta);
+        planeY = oldPlaneX * Math.sin(theta) + planeY * Math.cos(theta);
     }
 
     public void paint(Graphics g) {
@@ -33,30 +45,89 @@ public class Render3D extends JPanel {
         g2D.setPaint(Color.BLACK);
         g2D.fillRect(0, this.getHeight() / 2, this.getWidth(), this.getHeight() / 2);
 
-        double maxRad = Math.toRadians(this.fov);
+        double posX = this.stage.player.x;
+        double posY = this.stage.player.y;
 
-        for (double i = -maxRad / 2; i < maxRad / 2; i += maxRad / numberOfRays) {
-            Ray r = new Ray(this.stage.player.x, this.stage.player.y, this.stage.player.r - Math.PI + i,
-                    this.stage.walls);
-            double[] endpoint = r.move(g2D);
+        for (int x = 0; x < screenWidth; x++) {
+            double cameraX = 2 * x / (double) screenWidth - 1; // x-coordinate in camera space
+            double rayDirX = dirX + planeX * cameraX;
+            double rayDirY = dirY + planeY * cameraX;
 
-            if (endpoint.length > 0) {
+            int mapX = (int) posX;
+            int mapY = (int) posY;
 
-                double distance = 1 / Math.sqrt(Math.pow(this.stage.player.x - (double) endpoint[0], 2)
-                        + Math.pow(this.stage.player.y - (double) endpoint[1], 2));
+            double sideDistX;
+            double sideDistY;
 
-                double height = distance * 10000;
-                double min_height = 250 - height / 2;
+            double deltaDistX = (rayDirX == 0) ? 1e30 : Math.abs(1 / rayDirX);
+            double deltaDistY = (rayDirY == 0) ? 1e30 : Math.abs(1 / rayDirY);
 
-                if (endpoint[2] == 1) {
-                    g2D.setPaint(Color.darkGray);
+            double perpWallDist;
+
+            // what direction to step in x or y-direction (either +1 or -1)
+            int stepX;
+            int stepY;
+
+            int side = 0; // was a NS or a EW wall hit?
+
+            if (rayDirX < 0) {
+                stepX = -1;
+                sideDistX = (posX - mapX) * deltaDistX;
+            } else {
+                stepX = 1;
+                sideDistX = (mapX + 1.0 - posX) * deltaDistX;
+            }
+            if (rayDirY < 0) {
+                stepY = -1;
+                sideDistY = (posY - mapY) * deltaDistY;
+            } else {
+                stepY = 1;
+                sideDistY = (mapY + 1.0 - posY) * deltaDistY;
+            }
+
+            while (true) {
+                // jump to next map square, either in x-direction, or in y-direction
+                if (sideDistX < sideDistY) {
+                    sideDistX += deltaDistX;
+                    mapX += stepX;
+                    side = 0;
                 } else {
-                    g2D.setPaint(Color.lightGray);
+                    sideDistY += deltaDistY;
+                    mapY += stepY;
+                    side = 1;
                 }
 
-                g2D.fillRect((int) (i * -1 * screenWidth) + screenWidth / 2, (int) min_height, (int) Math.ceil(screenWidth/numberOfRays) + 2, (int) height);
-                // g2D.drawRect();
+                // Check if ray has hit a wall
+                if (this.stage.walls[mapX][mapY] > 0)
+                    break;
             }
+
+            if (side == 0)
+                perpWallDist = (sideDistX - deltaDistX);
+            else
+                perpWallDist = (sideDistY - deltaDistY);
+
+            // Calculate height of line to draw on screen
+            int h = 500;
+
+            int lineHeight = (int) (h / perpWallDist);
+
+            // calculate lowest and highest pixel to fill in current stripe
+            int drawStart = -lineHeight / 2 + h / 2;
+            if (drawStart < 0)
+                drawStart = 0;
+            int drawEnd = lineHeight / 2 + h / 2;
+            if (drawEnd >= h)
+                drawEnd = h - 1;
+
+                g2D.setPaint(Color.gray);
+            if (side == 1){
+                g2D.setPaint(Color.lightGray);
+            }
+
+            g2D.drawLine(x, drawStart, x, drawEnd);
+
         }
+
     }
 }
