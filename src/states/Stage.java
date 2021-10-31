@@ -50,6 +50,11 @@ public class Stage extends StateABC {
 
     public void tick(double delta, ArrayList<Integer> keysPressed) {
 
+        // Tick Stage Objects
+        if (this.player.projectileCooldown > 0) {
+            this.player.projectileCooldown --;
+        }
+
         //W - 87
         //A - 65
         //S - 83
@@ -69,6 +74,10 @@ public class Stage extends StateABC {
         if (keysPressed.contains(37)){
             this.player.rotate(Math.toRadians(2));
             this.panel3D.rotate(Math.toRadians(2));
+        }
+
+        if (keysPressed.contains(17)) {
+            this.player.createProjectile();
         }
 
 

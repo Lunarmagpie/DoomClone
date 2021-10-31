@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.BasicStroke;
 
+import entities.PlayerProjectile;
 import states.Stage;
 
 public class Player {
@@ -13,6 +14,10 @@ public class Player {
     public double rx = -1;
     public double ry = 0;
     public Stage stage;
+
+    public int projectileCooldown = 0;
+    private int maxProjectileCooldown = 40;
+    private PlayerProjectile projectile = new PlayerProjectile();
 
     public Player(Stage stage) {
         this.x = 22;
@@ -53,6 +58,13 @@ public class Player {
         double orx = rx;
         rx = rx * Math.cos(angle) - ry * Math.sin(angle);
         ry = orx * Math.sin(angle) + ry * Math.cos(angle);
+    }
+
+    public void createProjectile(){
+        if (this.projectileCooldown == 0) {
+            System.out.println("Kapow!");
+            projectileCooldown = maxProjectileCooldown;
+        }
     }
 
     public void render(Graphics2D g2D, double delta){
