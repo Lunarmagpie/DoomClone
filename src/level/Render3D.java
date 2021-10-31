@@ -8,18 +8,27 @@ import states.Stage;
 import java.awt.Toolkit;
 import level.Render2D;
 
+// Code is modified from https://lodev.org/cgtutor/raycasting.html
+
 public class Render3D extends JPanel {
 
     Stage stage;
     Render2D minimap;
 
-    int screenWidth = 500;
+    int screenWidth;
+    int screenHeight;
+    int[][] frameBuffer;
+
     double planeX = 0, planeY = .66;
     double time = 0;
     double oldTime = 0;
 
     public Render3D(Stage stage) {
         this.stage = stage;
+        this.screenWidth = getWidth();
+        this.screenHeight = getHeight();
+        this.frameBuffer = new int[this.screenWidth][this.screenHeight];
+
         minimap = new Render2D(stage);
     }
 
