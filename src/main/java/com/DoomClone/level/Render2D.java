@@ -1,10 +1,10 @@
-package level;
+package com.DoomClone.level;
 
 import java.awt.*;
 import javax.swing.*;
 
-import player.Player;
-import states.Stage;
+import com.DoomClone.player.Player;
+import com.DoomClone.states.Stage;
 
 public class Render2D extends JPanel {
 
@@ -59,7 +59,6 @@ public class Render2D extends JPanel {
 
         int px = (int) (this.player.y * s - (1 * s / 2));
         int py = (int) (this.player.x * s - (1 * s / 2));
-        double pr = Math.atan2(this.player.ry, this.player.rx);
         int[] playerX = {px, (int) (px + 1 * s), (int) (px + 1 * s), px };
         int[] playerY = {py + heightOffset, py + heightOffset, (int) (py + 1 * s) + heightOffset, (int) (py + 1 * s) + heightOffset};
 

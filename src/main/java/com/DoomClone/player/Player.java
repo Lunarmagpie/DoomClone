@@ -1,10 +1,10 @@
-package player;
+package com.DoomClone.player;
 
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.BasicStroke;
 
-import states.Stage;
+import com.DoomClone.states.Stage;
 
 public class Player {
 

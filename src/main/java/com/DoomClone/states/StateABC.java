@@ -1,4 +1,4 @@
-package states;
+package com.DoomClone.states;
 
 import javax.swing.JFrame;
 import java.awt.event.KeyEvent;
