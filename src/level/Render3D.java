@@ -8,8 +8,6 @@ import states.Stage;
 import java.awt.Toolkit;
 import level.Render2D;
 
-// Code is modified from https://lodev.org/cgtutor/raycasting.html
-
 public class Render3D extends JPanel {
 
     Stage stage;
@@ -18,11 +16,14 @@ public class Render3D extends JPanel {
     int screenWidth;
     int screenHeight;
 
-    int[][] texture;
-    int texHeight = 32;
     int texWidth = 32;
+    int texHeight = 32;
+    int[][] texture;
 
-    double planeX = 0, planeY = .75;
+    int h;
+    int toolbarHeight = 120;
+    int resolution = 2;
+    double planeX = 0, planeY = 0.75;
     double time = 0;
     double oldTime = 0;
 
@@ -32,7 +33,6 @@ public class Render3D extends JPanel {
         this.screenHeight = getHeight();
 
         // Generate Textures
-        // TODO: Generate from images
         // generate some textures
         this.texture = new int[1][texWidth * texHeight + texWidth];
 
@@ -48,8 +48,8 @@ public class Render3D extends JPanel {
     }
 
     public void paint(Graphics g) {
-        screenWidth = this.getWidth();
-        int h = this.getHeight();
+        screenWidth = (int) ((this.getWidth()) / resolution);
+        h = (int) ((this.getHeight() - this.toolbarHeight) / resolution);
         Toolkit.getDefaultToolkit().sync();
 
         // DRAW RAYS
@@ -60,7 +60,7 @@ public class Render3D extends JPanel {
         g2D.fillRect(0, 0, this.getWidth(), this.getHeight());
 
         g2D.setPaint(Color.BLACK);
-        g2D.fillRect(0, this.getHeight() / 2, this.getWidth(), this.getHeight() / 2);
+        g2D.fillRect(0, (this.getHeight() - this.toolbarHeight) / 2, this.getWidth(), this.getHeight() / 2);
 
         double posX = this.stage.player.x;
         double posY = this.stage.player.y;
@@ -174,13 +174,18 @@ public class Render3D extends JPanel {
                     color = (color >> 1) & 8355711;
 
                 g2D.setColor(new Color(color));
-                g2D.drawLine(x, y, x, y);
+                g2D.fillRect(x*this.resolution, y*this.resolution, this.resolution, this.resolution);
             }
+
 
         }
 
-        // PAINT MINIMAP
-        minimap.paint(g);
+        //PAINT UI COMPONENTS
+
+        g2D.setPaint(Color.BLUE); //draw toolbar
+        g2D.fillRect(0, 450, this.getWidth(), 120);
+
+        minimap.paint(g); //draw minimap
 
     }
 }
