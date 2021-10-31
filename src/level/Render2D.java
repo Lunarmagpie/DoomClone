@@ -54,8 +54,8 @@ public class Render2D extends JPanel {
         g2D.setStroke(new BasicStroke(1));
         this.player = state.player;
 
-        int px = (int) (this.player.y * s);
-        int py = (int) (this.player.x * s);
+        int px = (int) (this.player.y * s - (1 * s / 2));
+        int py = (int) (this.player.x * s - (1 * s / 2));
         double pr = Math.atan2(this.player.ry, this.player.rx);
         int[] playerX = {px, (int) (px + 1 * s), (int) (px + 1 * s), px };
         int[] playerY = {py, py, (int) (py + 1 * s), (int) (py + 1 * s)  };

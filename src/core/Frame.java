@@ -7,7 +7,7 @@ public class Frame extends JFrame{
  
     Frame(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(500, 500));
+        this.setPreferredSize(new Dimension(800, 600));
         this.setResizable(false);
         this.pack();
         this.setLocationRelativeTo(null);
