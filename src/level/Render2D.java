@@ -8,6 +8,9 @@ import states.Stage;
 
 public class Render2D extends JPanel {
 
+    int size = 120;
+    int mapSize;
+    int heightOffset = 450;
     float s =  (float) 5;
     Stage state;
     Player player;
@@ -15,6 +18,8 @@ public class Render2D extends JPanel {
 
     public Render2D(Stage state) {
         this.state = state;
+        this.mapSize = state.walls.length;
+        this.s = size / mapSize;
     }
 
     public void paint(Graphics g) {
@@ -22,14 +27,12 @@ public class Render2D extends JPanel {
 
         Graphics2D g2D = (Graphics2D) g;
 
-        int mapSize = state.walls.length;
-
         // DRAW BORDER AND BACKGROUND OF MINIMAP
         g2D.setPaint(Color.WHITE);
-        g2D.fillRect(0, 0, (int) (mapSize * s), (int) (mapSize * s));
+        g2D.fillRect(0, 0 + heightOffset, (int) (mapSize * s), (int) (mapSize * s));
 
-        g2D.setPaint(Color.BLUE);
-        g2D.drawRect(0, 0, (int) (mapSize * s), (int) (mapSize * s));
+        //g2D.setPaint(Color.BLUE);
+        //g2D.drawRect(0, 0, (int) (mapSize * s), (int) (mapSize * s));
 
         // DRAW WALLS
         g2D.setPaint(Color.BLUE);
@@ -40,7 +43,7 @@ public class Render2D extends JPanel {
         for (int[] wall_row : state.walls) {
             for (int wall : wall_row) {
                 if (wall > 0) {
-                    Rectangle wallr = new Rectangle((int) (wallx * s), (int) (wally * s), (int) (1 * this.s), (int) (1 * this.s));
+                    Rectangle wallr = new Rectangle((int) (wallx * s), (int) (wally * s) + heightOffset, (int) (1 * this.s), (int) (1 * this.s));
                     g2D.fill(wallr);
                 }
                 wallx++;
@@ -58,7 +61,7 @@ public class Render2D extends JPanel {
         int py = (int) (this.player.x * s - (1 * s / 2));
         double pr = Math.atan2(this.player.ry, this.player.rx);
         int[] playerX = {px, (int) (px + 1 * s), (int) (px + 1 * s), px };
-        int[] playerY = {py, py, (int) (py + 1 * s), (int) (py + 1 * s)  };
+        int[] playerY = {py + heightOffset, py + heightOffset, (int) (py + 1 * s) + heightOffset, (int) (py + 1 * s) + heightOffset};
 
         playerShape = new Polygon(playerX, playerY, playerX.length);
         //g2D.rotate(pr, px + 5, py + 5);
