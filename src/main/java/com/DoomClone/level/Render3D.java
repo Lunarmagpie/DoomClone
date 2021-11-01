@@ -1,12 +1,11 @@
-package level;
+package com.DoomClone.level;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
-import states.Stage;
+import com.DoomClone.states.Stage;
 import java.awt.Toolkit;
-import level.Render2D;
 
 public class Render3D extends JPanel {
 

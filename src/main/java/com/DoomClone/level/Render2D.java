@@ -1,10 +1,10 @@
-package level;
+package com.DoomClone.level;
 
 import java.awt.*;
 import javax.swing.*;
 
-import player.Player;
-import states.Stage;
+import com.DoomClone.player.Player;
+import com.DoomClone.states.Stage;
 
 public class Render2D extends JPanel {
 
@@ -20,6 +20,7 @@ public class Render2D extends JPanel {
         this.state = state;
         this.mapSize = state.walls.length;
         this.s = size / mapSize;
+        this.player = state.player;
     }
 
     public void paint(Graphics g) {
@@ -52,21 +53,40 @@ public class Render2D extends JPanel {
             wally++;
         }
 
+        // DRAW PLAYER PROJECTILES
+        g2D.setPaint(Color.RED);
+        g2D.setStroke(new BasicStroke(1));
+
+        for (int i = 0; i < this.player.projectile.obj.size(); i++) {
+
+            double[] projectile = this.player.projectile.obj.get(i);
+            g2D.fillRect(transformToMinimapX(projectile[1]), transformToMinimapY(projectile[0]), 2, 2);
+        }
+
         // DRAW PLAYER
         g2D.setPaint(Color.BLACK);
         g2D.setStroke(new BasicStroke(1));
-        this.player = state.player;
 
-        int px = (int) (this.player.y * s - (1 * s / 2));
-        int py = (int) (this.player.x * s - (1 * s / 2));
-        double pr = Math.atan2(this.player.ry, this.player.rx);
+        int px = transformToMinimapX(this.player.y);
+        int py = transformToMinimapY(this.player.x);
         int[] playerX = {px, (int) (px + 1 * s), (int) (px + 1 * s), px };
-        int[] playerY = {py + heightOffset, py + heightOffset, (int) (py + 1 * s) + heightOffset, (int) (py + 1 * s) + heightOffset};
+        int[] playerY = {py, py, (int) (py + 1 * s), (int) (py + 1 * s)};
 
         playerShape = new Polygon(playerX, playerY, playerX.length);
-        //g2D.rotate(pr, px + 5, py + 5);
         g2D.fillPolygon(playerShape);
 
+    }
+
+    private int transformToMinimap(double num) {
+        return (int) (num * s - (s / 2));
+    }
+
+    private int transformToMinimapX(double num) {
+        return transformToMinimap(num);
+    }
+
+    private int transformToMinimapY(double num) {
+        return transformToMinimap(num) + heightOffset;
     }
 
 }

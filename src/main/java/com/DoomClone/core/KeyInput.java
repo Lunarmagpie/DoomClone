@@ -1,4 +1,4 @@
-package core;
+package com.DoomClone.core;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.awt.event.KeyEvent;

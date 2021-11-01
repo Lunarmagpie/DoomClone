@@ -1,16 +1,14 @@
-package states;
+package com.DoomClone.states;
 
 import javax.swing.JFrame;
-import java.awt.Dimension;
-import level.Render2D;
-import level.Render3D;
+import com.DoomClone.level.Render2D;
+import com.DoomClone.level.Render3D;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.awt.Color;
 
 public class Stage extends StateABC {
 
-    public player.Player player;
+    public com.DoomClone.player.Player player;
     Render2D panel;
     Render2D minimap;
     Render3D panel3D;
@@ -42,10 +40,17 @@ public class Stage extends StateABC {
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
 
     public Stage() {
-        this.player = new player.Player(this);
+        this.player = new com.DoomClone.player.Player(this);
     }
 
     public void tick(double delta, ArrayList<Integer> keysPressed) {
+
+        // Entity ticks
+        this.player.projectile.tick();
+
+        if (this.player.projectileCooldown > 0) {
+            this.player.projectileCooldown--;
+        }
 
         // W - 87
         // A - 65
@@ -66,6 +71,10 @@ public class Stage extends StateABC {
         if (keysPressed.contains(37)) {
             this.player.rotate(Math.toRadians(2));
             this.panel3D.rotate(Math.toRadians(2));
+        }
+
+        if (keysPressed.contains(17)) {
+            this.player.createProjectile();
         }
 
     }

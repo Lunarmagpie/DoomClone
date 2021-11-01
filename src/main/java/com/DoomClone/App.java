@@ -1,10 +1,9 @@
-import core.*;
-import states.Stage;
+package com.DoomClone;
 
-import java.awt.*; 
-import javax.swing.*;
+import com.DoomClone.core.GameLoop;
+import com.DoomClone.states.*;
 
-class Main{
+class App {
     public static void main(String[] args) {
         GameLoop loop = new GameLoop(60, new Stage());
         loop.changeState(new Stage());

@@ -1,3 +1,5 @@
+package com.DoomClone.level;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
@@ -11,7 +13,7 @@ public class Level {
     HashMap<String, Integer> entities = new HashMap<String, Integer>();
 
     public static void main(String[] args) {
-        Level l = new Level("level.yaml");
+        // Level l = new Level("level.yaml");
     }
 
     public Level(String name) {
