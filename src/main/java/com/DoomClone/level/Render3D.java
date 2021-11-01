@@ -188,12 +188,20 @@ public class Render3D extends JPanel {
                 // make color darker for y-sides: R, G and B byte each divided through two with
                 // a "shift" and an "and"
                 if (side == 1)
-                    color = (color >> 1) & 8355711;
+                    color = (color >> 1) & 0x7F7F7F;
 
                 g2D.setColor(new Color(color));
                 g2D.fillRect(x * this.resolution, y * this.resolution, this.resolution, this.resolution);
-                g2D.fillRect(x * this.resolution, y * this.resolution - (lineHeight - 1) * this.resolution, this.resolution,
-                        this.resolution);
+                g2D.fillRect(x * this.resolution, y * this.resolution - (lineHeight - 1) * this.resolution, this.resolution, this.resolution);
+
+                color = (color >> 1) & 0x7F7F7F;
+                if (texY < 11)
+                    color = (color >> 1) & 0x7F7F7F;
+                if (texY < 22)
+                    color = (color >> 1) & 0x7F7F7F;
+
+                g.setColor(new Color(color));
+                g2D.fillRect(x * this.resolution, y * this.resolution - (lineHeight * 2 - 2) * this.resolution, this.resolution, this.resolution);
             }
 
         }

@@ -42,10 +42,15 @@ public class GameLoop {
     public void run() {
         long delta = (long) ((1 / framerate) * 1000);
 
+        long frameTime;
+        long nextFrame;
+
         try {
             while (true) {
+                frameTime = (long) System.nanoTime() / 1_000_000;
+                nextFrame = frameTime + delta;
                 tick(delta);
-                Thread.sleep(delta);
+                Thread.sleep(nextFrame - System.nanoTime() / 1_000_000);
             }
         } catch (InterruptedException e) {
             System.out.println("Game crashed");
