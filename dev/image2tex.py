@@ -1,3 +1,5 @@
+import os
+import json
 import sys
 from PIL import Image
 
@@ -29,8 +31,9 @@ def main():
         for y in range(height):
             r, g, b, a = img_colors[x, y]
             output[width * y + x] = (r << 16) + (g << 8) + b
-    
-    print(str(output).replace("'",""))
+
+    with open(f"assets/{image_path.split('.')[-2]}.json", "w") as file:
+        file.write(json.dumps(output))
 
 
 if __name__ == '__main__':
