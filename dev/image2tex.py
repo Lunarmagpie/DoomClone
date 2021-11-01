@@ -4,10 +4,6 @@ import sys
 from PIL import Image
 
 
-TEX_WIDTH = 16
-TEX_HEIGHT = 16
-
-
 def main():
 
     try:
