@@ -115,9 +115,9 @@ public class Render3D extends JPanel {
         double dirY = this.stage.player.ry;
 
         // Clear the buffer
-        for (int x = 0; x < buffer.length; x++) {
-            for (int y = 0; y < buffer[x].length; y++) {
-                buffer[x][y] = this.sky;
+        for (int x = 0; x < this.buffer.length; x++) {
+            for (int y = 0; y < this.buffer[x].length; y++) {
+                this.buffer[x][y] = this.sky;
             }
         }
 
@@ -163,7 +163,7 @@ public class Render3D extends JPanel {
                 floorY += floorStepY;
 
                 // choose texture and draw the pixel
-                int floorTexture = 0;
+                int floorTexture = 1;
                 int color;
 
                 // Floor
@@ -283,25 +283,32 @@ public class Render3D extends JPanel {
                     continue;
                 }
 
-                if (texY < 11) {
-                    color = (color >> 1) & 0x7F7F7F;
-                    buffer[y - lineHeight + 1][x] = color;
-                } else {
-                    buffer[y - lineHeight + 1][x] = color;
-                    color = (color >> 1) & 0x7F7F7F;
-                }
+                buffer[y - lineHeight + 1][x] = color;
 
                 if (y - lineHeight * 2 + 2 < 0) {
                     continue;
                 }
 
-                color = (color >> 1) & 0x7F7F7F;
-                if (texY < 11)
-                    color = (color >> 1) & 0x7F7F7F;
-                if (texY < 22)
-                    color = (color >> 1) & 0x7F7F7F;
+                // blend the color with the sky color
+                int colorToBlendTo = this.sky;
+                float blending = (float) Math.pow((float) texY / 32, 2);
+                float inverse_blending = 1 - blending;
 
-                buffer[y - lineHeight * 2 + 2][x] = color;
+                int colorR = (color & 0xFF0000) >> 16;
+                int colorG = (color & 0xFF00) >> 8;
+                int colorB = (color & 0xFF);
+
+                int toR = (colorToBlendTo & 0xFF0000) >> 16;
+                int toG = (colorToBlendTo & 0xFF00) >> 8;
+                int toB = (colorToBlendTo & 0xFF);
+
+                int red = (int) (colorR * blending + toR * inverse_blending);
+                int green = (int) (colorG * blending + toG * inverse_blending);
+                int blue = (int) (colorB * blending + toB * inverse_blending);
+
+                int blended = (red << 16) + (green << 8) + blue;
+
+                buffer[y - lineHeight * 2 + 2][x] = blended;
             }
 
         }
