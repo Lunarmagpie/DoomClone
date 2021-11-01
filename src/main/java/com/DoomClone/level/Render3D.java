@@ -21,8 +21,8 @@ public class Render3D extends JPanel {
     int screenWidth;
     int screenHeight;
 
-    int texWidth = 64;
-    int texHeight = 64;
+    int texWidth = 32;
+    int texHeight = 32;
     int[][] buffer;
     int[][] texture;
     JSONObject textureMap;
