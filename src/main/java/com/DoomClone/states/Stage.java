@@ -90,6 +90,8 @@ public class Stage extends StateABC {
         // frame.add(minimap);
 
         frame.pack();
+
+        panel3D.renderInit();
     }
 
     public void keyPressed(KeyEvent e) {

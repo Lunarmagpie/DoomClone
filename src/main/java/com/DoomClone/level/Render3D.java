@@ -23,6 +23,7 @@ public class Render3D extends JPanel {
 
     int texWidth = 32;
     int texHeight = 32;
+    int[][] buffer;
     int[][] texture;
     JSONObject textureMap;
 
@@ -35,9 +36,8 @@ public class Render3D extends JPanel {
     Color floor = new Color(38, 25, 20);
 
     public Render3D(Stage stage) {
+
         this.stage = stage;
-        this.screenWidth = getWidth();
-        this.screenHeight = getHeight();
 
         JSONParser parser = new JSONParser();
 
@@ -90,6 +90,13 @@ public class Render3D extends JPanel {
         planeY = oldPlaneX * Math.sin(theta) + planeY * Math.cos(theta);
     }
 
+    public void renderInit() {
+        this.screenWidth = getWidth();
+        this.screenHeight = getHeight();
+
+        this.buffer = new int[screenWidth / resolution][screenHeight / resolution];
+    }
+
     public void paint(Graphics g) {
         screenWidth = (int) ((this.getWidth()) / resolution);
         h = (int) ((this.getHeight() - this.toolbarHeight) / resolution);
@@ -98,19 +105,24 @@ public class Render3D extends JPanel {
         // DRAW RAYS
         Graphics2D g2D = (Graphics2D) g;
 
-        // fill sky and ground
-        g2D.setPaint(Color.black);
-        g2D.fillRect(0, 0, this.getWidth(), this.getHeight());
-
-        g2D.setPaint(this.floor);
-        g2D.fillRect(0, (this.getHeight() - this.toolbarHeight) / 2, this.getWidth(), this.getHeight() / 2);
-
         double posX = this.stage.player.x;
         double posY = this.stage.player.y;
 
         // Player
         double dirX = this.stage.player.rx;
         double dirY = this.stage.player.ry;
+
+        // Clear the buffer
+        for (int x = 0; x < buffer.length; x++) {
+            for (int y = 0; y < buffer[x].length; y++) {
+
+                if (y > this.screenHeight / 2) {
+                    buffer[x][y] = 10;
+                } else {
+                    buffer[x][y] = 0;
+                }
+            }
+        }
 
         for (int x = 0; x < screenWidth; x++) {
 
@@ -216,17 +228,23 @@ public class Render3D extends JPanel {
                 if (side == 1)
                     color = (color >> 1) & 0x7F7F7F;
 
-                g2D.setColor(new Color(color));
-                g2D.fillRect(x * this.resolution, y * this.resolution, this.resolution, this.resolution);
+                buffer[x][y] = color;
 
-                if (texY < 11){
+                if (y - lineHeight - 1 < 0) {
+                    continue;
+                }
+
+                if (texY < 11) {
                     color = (color >> 1) & 0x7F7F7F;
-                    g2D.setColor(new Color(color));
-                }else{
+                    buffer[x][y - lineHeight - 1] = color;
+                } else {
+                    buffer[x][y - lineHeight - 1] = color;
                     color = (color >> 1) & 0x7F7F7F;
                 }
-                g2D.fillRect(x * this.resolution, y * this.resolution - (lineHeight - 1) * this.resolution, this.resolution, this.resolution);
 
+                if (y - lineHeight * 2 - 2 < 0) {
+                    continue;
+                }
 
                 color = (color >> 1) & 0x7F7F7F;
                 if (texY < 11)
@@ -234,10 +252,17 @@ public class Render3D extends JPanel {
                 if (texY < 22)
                     color = (color >> 1) & 0x7F7F7F;
 
-                g.setColor(new Color(color));
-                g2D.fillRect(x * this.resolution, y * this.resolution - (lineHeight * 2 - 2) * this.resolution, this.resolution, this.resolution);
+                buffer[x][y - lineHeight * 2 - 2] = color;
             }
 
+        }
+
+        for (int x = 0; x < buffer.length; x++) {
+            for (int y = 0; y < buffer[x].length; y++) {
+                g.setColor(new Color(buffer[x][y]));
+                g.fillRect(x * this.resolution, y * this.resolution, this.resolution, this.resolution);
+
+            }
         }
 
         // PAINT UI COMPONENTS
