@@ -21,8 +21,8 @@ public class Render3D extends JPanel {
     int screenWidth;
     int screenHeight;
 
-    int texWidth = 32;
-    int texHeight = 32;
+    int texWidth = 64;
+    int texHeight = 64;
     int[][] buffer;
     int[][] texture;
     JSONObject textureMap;
@@ -122,7 +122,7 @@ public class Render3D extends JPanel {
         }
 
         // FLOOR CASTING
-        for (int y = h/2; y < h; y++) {
+        for (int y = h / 2; y < h; y++) {
             // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
             double rayDirX0 = dirX - planeX;
             double rayDirY0 = dirY - planeY;
@@ -166,7 +166,7 @@ public class Render3D extends JPanel {
                 int floorTexture = 0;
                 int color;
 
-                //Floor
+                // Floor
                 color = texture[floorTexture][texWidth * ty + tx];
                 buffer[y][x] = color;
             }
@@ -279,19 +279,19 @@ public class Render3D extends JPanel {
 
                 buffer[y][x] = color;
 
-                if (y - lineHeight - 1 < 0) {
+                if (y - lineHeight + 1 < 0) {
                     continue;
                 }
 
                 if (texY < 11) {
                     color = (color >> 1) & 0x7F7F7F;
-                    buffer[y - lineHeight - 1][x] = color;
+                    buffer[y - lineHeight + 1][x] = color;
                 } else {
-                    buffer[y - lineHeight - 1][x] = color;
+                    buffer[y - lineHeight + 1][x] = color;
                     color = (color >> 1) & 0x7F7F7F;
                 }
 
-                if (y - lineHeight * 2 - 2 < 0) {
+                if (y - lineHeight * 2 + 2 < 0) {
                     continue;
                 }
 
@@ -301,7 +301,7 @@ public class Render3D extends JPanel {
                 if (texY < 22)
                     color = (color >> 1) & 0x7F7F7F;
 
-                buffer[y - lineHeight * 2 - 2][x] = color;
+                buffer[y - lineHeight * 2 + 2][x] = color;
             }
 
         }
