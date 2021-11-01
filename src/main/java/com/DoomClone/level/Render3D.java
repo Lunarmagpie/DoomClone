@@ -71,9 +71,10 @@ public class Render3D extends JPanel {
                     JSONArray this_tex = (JSONArray) parser.parse(new FileReader(file));
 
                     Object[] ints = this_tex.toArray();
+                    Long index = (Long) textureMap.get(file.getName().split("\\.")[0]);
 
                     for (int i = 0; i < ints.length; i++) {
-                        texture[0][i] = ((Long) ints[i]).intValue();
+                        texture[index.intValue() - 1][i] = ((Long) ints[i]).intValue();
                     }
                 }
             }
@@ -317,7 +318,7 @@ public class Render3D extends JPanel {
             for (int x = 0; x < buffer[y].length; x++) {
                 g.setColor(new Color(buffer[y][x]));
                 g.fillRect(x * this.resolution, y * this.resolution, this.resolution, this.resolution);
-            }        
+            }
         }
 
         // PAINT UI COMPONENTS
