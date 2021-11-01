@@ -42,16 +42,16 @@ public class Render3D extends JPanel {
 
         JSONParser parser = new JSONParser();
 
-        try{
+        try {
             JSONArray this_tex = (JSONArray) parser.parse(new FileReader("assets/blocks/books.rtx"));
 
             Object[] ints = this_tex.toArray();
 
-            for (int i = 0; i < ints.length; i++){
+            for (int i = 0; i < ints.length; i++) {
                 texture[0][i] = ((Long) ints[i]).intValue();
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -192,13 +192,15 @@ public class Render3D extends JPanel {
 
                 g2D.setColor(new Color(color));
                 g2D.fillRect(x * this.resolution, y * this.resolution, this.resolution, this.resolution);
+                g2D.fillRect(x * this.resolution, y * this.resolution - (lineHeight - 1) * this.resolution, this.resolution,
+                        this.resolution);
             }
 
         }
 
         // PAINT UI COMPONENTS
 
-        g2D.setPaint(Color.gray); //draw toolbar
+        g2D.setPaint(Color.gray); // draw toolbar
         g2D.fillRect(0, 450, this.getWidth(), 120);
 
         minimap.paint(g); // draw minimap
