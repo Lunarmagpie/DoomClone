@@ -52,12 +52,11 @@ public class Render3D extends JPanel {
                 Long l = (Long) value;
                 int val = l.intValue();
 
-                if (val > largestValue){
+                if (val > largestValue) {
                     largestValue = val;
                 }
 
             }
-            
 
             this.texture = new int[largestValue][texWidth * texHeight + texWidth];
 
@@ -219,8 +218,15 @@ public class Render3D extends JPanel {
 
                 g2D.setColor(new Color(color));
                 g2D.fillRect(x * this.resolution, y * this.resolution, this.resolution, this.resolution);
-<<<<<<< HEAD
+
+                if (texY < 11){
+                    color = (color >> 1) & 0x7F7F7F;
+                    g2D.setColor(new Color(color));
+                }else{
+                    color = (color >> 1) & 0x7F7F7F;
+                }
                 g2D.fillRect(x * this.resolution, y * this.resolution - (lineHeight - 1) * this.resolution, this.resolution, this.resolution);
+
 
                 color = (color >> 1) & 0x7F7F7F;
                 if (texY < 11)
@@ -230,10 +236,6 @@ public class Render3D extends JPanel {
 
                 g.setColor(new Color(color));
                 g2D.fillRect(x * this.resolution, y * this.resolution - (lineHeight * 2 - 2) * this.resolution, this.resolution, this.resolution);
-=======
-                g2D.fillRect(x * this.resolution, y * this.resolution - (lineHeight - 1) * this.resolution,
-                        this.resolution, this.resolution);
->>>>>>> 31a3fcaf3f31aae4ebc7a9ab23f3d955de15d308
             }
 
         }
