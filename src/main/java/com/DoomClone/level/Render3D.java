@@ -25,6 +25,7 @@ public class Render3D extends JPanel {
     double planeX = 0, planeY = 0.75;
     double time = 0;
     double oldTime = 0;
+    Color floor = new Color(38, 25, 20);
 
     public Render3D(Stage stage) {
         this.stage = stage;
@@ -55,10 +56,10 @@ public class Render3D extends JPanel {
         Graphics2D g2D = (Graphics2D) g;
 
         // fill sky and ground
-        g2D.setPaint(Color.WHITE);
+        g2D.setPaint(Color.black);
         g2D.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-        g2D.setPaint(Color.BLACK);
+        g2D.setPaint(this.floor);
         g2D.fillRect(0, (this.getHeight() - this.toolbarHeight) / 2, this.getWidth(), this.getHeight() / 2);
 
         double posX = this.stage.player.x;
@@ -181,7 +182,7 @@ public class Render3D extends JPanel {
 
         //PAINT UI COMPONENTS
 
-        g2D.setPaint(Color.BLUE); //draw toolbar
+        g2D.setPaint(Color.gray); //draw toolbar
         g2D.fillRect(0, 450, this.getWidth(), 120);
 
         minimap.paint(g); //draw minimap
