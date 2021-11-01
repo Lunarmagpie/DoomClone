@@ -2,12 +2,11 @@
  * state's functions.
  */
 
-package core;
+package com.DoomClone.core;
 
-import states.StateABC;
+import com.DoomClone.states.StateABC;
 
 import javax.swing.*;
-import java.awt.event.KeyListener;
 
 public class GameLoop {
 

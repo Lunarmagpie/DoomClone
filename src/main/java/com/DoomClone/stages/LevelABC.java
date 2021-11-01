@@ -1,4 +1,4 @@
-package stages;
+package com.DoomClone.stages;
 
 public abstract class LevelABC {
     

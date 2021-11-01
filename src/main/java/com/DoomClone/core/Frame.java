@@ -1,4 +1,4 @@
-package core;
+package com.DoomClone.core;
 
 import javax.swing.*;
 import java.awt.Dimension;

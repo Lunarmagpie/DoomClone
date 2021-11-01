@@ -1,10 +1,11 @@
-package player;
+package com.DoomClone.player;
 
 import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.BasicStroke;
 
-import states.Stage;
+import com.DoomClone.entities.PlayerProjectile;
+import com.DoomClone.states.Stage;
 
 public class Player {
 
@@ -14,6 +15,10 @@ public class Player {
     public double ry = 0;
     public Stage stage;
 
+    public int projectileCooldown = 0;
+    private int maxProjectileCooldown = 40;
+    public PlayerProjectile projectile;
+
     public Player(Stage stage) {
         this.x = 22;
         this.y = 12;
@@ -22,6 +27,7 @@ public class Player {
         this.ry = 0;
 
         this.stage = stage;
+        projectile = new PlayerProjectile(this.stage);
     }
 
     public void move(double distance, double angle){
@@ -53,6 +59,14 @@ public class Player {
         double orx = rx;
         rx = rx * Math.cos(angle) - ry * Math.sin(angle);
         ry = orx * Math.sin(angle) + ry * Math.cos(angle);
+    }
+
+    public void createProjectile(){
+        if (this.projectileCooldown == 0) {
+            System.out.println("Kapow!");
+            this.projectile.create(this.x, this.y, this.rx, this.ry);
+            projectileCooldown = maxProjectileCooldown;
+        }
     }
 
     public void render(Graphics2D g2D, double delta){
