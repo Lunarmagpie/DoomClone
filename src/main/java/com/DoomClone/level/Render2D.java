@@ -10,16 +10,14 @@ public class Render2D extends JPanel {
 
     int size = 120;
     int mapSize;
-    int heightOffset = 450;
+    int heightOffset = 445;
     float s =  (float) 5;
     Stage state;
     Player player;
-    private Polygon playerShape;
 
     public Render2D(Stage state) {
         this.state = state;
-        this.mapSize = state.walls.length;
-        this.s = size / mapSize;
+        this.s = size / 24;
         this.player = state.player;
     }
 
@@ -28,25 +26,31 @@ public class Render2D extends JPanel {
 
         Graphics2D g2D = (Graphics2D) g;
 
-        // DRAW BORDER AND BACKGROUND OF MINIMAP
-        g2D.setPaint(Color.WHITE);
-        g2D.fillRect(0, 0 + heightOffset, (int) (mapSize * s), (int) (mapSize * s));
+        // DRAW BACKGROUND OF MINIMAP
+        g2D.setPaint(Color.black);
+        g2D.fillRect(0, heightOffset, (int) size, (int) size);
 
-        //g2D.setPaint(Color.BLUE);
-        //g2D.drawRect(0, 0, (int) (mapSize * s), (int) (mapSize * s));
+        // get player position       
+        int px = transformToMinimapX(this.player.y);
+        int py = transformToMinimapY(this.player.x);
 
         // DRAW WALLS
-        g2D.setPaint(Color.gray);
         g2D.setStroke(new BasicStroke(0));
 
         int wallx = 0;
         int wally = 0;
         for (int[] wall_row : state.walls) {
             for (int wall : wall_row) {
-                if (wall > 0) {
-                    Rectangle wallr = new Rectangle((int) (wallx * s), (int) (wally * s) + heightOffset, (int) (1 * this.s), (int) (1 * this.s));
-                    g2D.fill(wallr);
-                }
+                if (wall > 0) g2D.setPaint(Color.gray);
+                else g2D.setPaint(Color.white);
+
+                int wallposx = transformToMinimapX(wallx);
+                int wallposy = transformToMinimapY(wally);
+                int wallwidth = (int) (this.s);
+                int wallheight = (int) (this.s);
+
+                if (wallposx < size && wallposy < heightOffset + size && wallposx > 0 && wallposy > heightOffset)
+                    g2D.fillRect(wallposx, wallposy, wallwidth, wallheight);
                 wallx++;
             }
             wallx = 0;
@@ -67,26 +71,28 @@ public class Render2D extends JPanel {
         g2D.setPaint(Color.BLACK);
         g2D.setStroke(new BasicStroke(1));
 
-        int px = transformToMinimapX(this.player.y);
-        int py = transformToMinimapY(this.player.x);
-        int[] playerX = {px, (int) (px + 1 * s), (int) (px + 1 * s), px };
-        int[] playerY = {py, py, (int) (py + 1 * s), (int) (py + 1 * s)};
+        // g2D.fillRect(px, py, (int) s, (int) s);
+        g2D.fillRect(px, py, (int) s, (int) s);
 
-        playerShape = new Polygon(playerX, playerY, playerX.length);
-        g2D.fillPolygon(playerShape);
+        // draw minimap border
+        g2D.setPaint(Color.black);
+        g2D.setStroke(new BasicStroke(5));
+        g2D.drawRect(2, heightOffset + 2, size, size);
 
     }
 
-    private int transformToMinimap(double num) {
-        return (int) (num * s - (s / 2));
+
+
+    private double transformToMinimap(double num) {
+        return (num * s - (s / 2));
     }
 
     private int transformToMinimapX(double num) {
-        return transformToMinimap(num);
+        return (int) (transformToMinimap(num) - transformToMinimap(this.player.y) + size / 2);
     }
 
     private int transformToMinimapY(double num) {
-        return transformToMinimap(num) + heightOffset;
+        return (int) (transformToMinimap(num) - transformToMinimap(this.player.x) + size / 2 + heightOffset);
     }
 
 }
