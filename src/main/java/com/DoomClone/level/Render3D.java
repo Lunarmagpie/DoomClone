@@ -47,8 +47,7 @@ public class Render3D extends JPanel {
             Object[] ints = this_tex.toArray();
 
             for (int i = 0; i < ints.length; i++){
-                Long l = (Long) ints[i];
-                texture[0][i] = l.intValue();
+                texture[0][i] = ((Long) ints[i]).intValue();
             }
 
         }catch (Exception e){
