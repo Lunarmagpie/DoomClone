@@ -92,6 +92,25 @@ public class Render3D extends JPanel {
         planeY = oldPlaneX * Math.sin(theta) + planeY * Math.cos(theta);
     }
 
+    public int blend(int color1, int color2, double val) {
+        float blending = (float) val;
+        float inverse_blending = 1 - blending;
+
+        int colorR = (color1 & 0xFF0000) >> 16;
+        int colorG = (color1 & 0xFF00) >> 8;
+        int colorB = (color1 & 0xFF);
+
+        int toR = (color2 & 0xFF0000) >> 16;
+        int toG = (color2 & 0xFF00) >> 8;
+        int toB = (color2 & 0xFF);
+
+        int red = (int) (colorR * blending + toR * inverse_blending);
+        int green = (int) (colorG * blending + toG * inverse_blending);
+        int blue = (int) (colorB * blending + toB * inverse_blending);
+
+        return (red << 16) + (green << 8) + blue;
+    }
+
     public void renderInit() {
         this.screenWidth = getWidth();
         this.screenHeight = getHeight();
@@ -278,6 +297,9 @@ public class Render3D extends JPanel {
                 if (side == 1)
                     color = (color >> 1) & 0x7F7F7F;
 
+                // blend the color with the sky color based on distance
+                if (step > 1) color  = blend(color, this.sky, 1 / step);
+
                 buffer[y][x] = color;
 
                 if (y - lineHeight + 1 < 0) {
@@ -290,24 +312,8 @@ public class Render3D extends JPanel {
                     continue;
                 }
 
-                // blend the color with the sky color
-                int colorToBlendTo = this.sky;
-                float blending = (float) Math.pow((float) texY / 32, 2);
-                float inverse_blending = 1 - blending;
-
-                int colorR = (color & 0xFF0000) >> 16;
-                int colorG = (color & 0xFF00) >> 8;
-                int colorB = (color & 0xFF);
-
-                int toR = (colorToBlendTo & 0xFF0000) >> 16;
-                int toG = (colorToBlendTo & 0xFF00) >> 8;
-                int toB = (colorToBlendTo & 0xFF);
-
-                int red = (int) (colorR * blending + toR * inverse_blending);
-                int green = (int) (colorG * blending + toG * inverse_blending);
-                int blue = (int) (colorB * blending + toB * inverse_blending);
-
-                int blended = (red << 16) + (green << 8) + blue;
+                // blend the color with the sky color based on height
+                int blended = blend(color, this.sky, Math.pow((double) texY / 32, 2));
 
                 buffer[y - lineHeight * 2 + 2][x] = blended;
             }

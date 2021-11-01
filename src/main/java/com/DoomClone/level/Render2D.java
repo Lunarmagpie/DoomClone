@@ -27,7 +27,7 @@ public class Render2D extends JPanel {
         Graphics2D g2D = (Graphics2D) g;
 
         // DRAW BACKGROUND OF MINIMAP
-        g2D.setPaint(Color.black);
+        g2D.setPaint(Color.darkGray);
         g2D.fillRect(0, heightOffset, (int) size, (int) size);
 
         // get player position       
@@ -41,11 +41,11 @@ public class Render2D extends JPanel {
         int wally = 0;
         for (int[] wall_row : state.walls) {
             for (int wall : wall_row) {
-                if (wall > 0) g2D.setPaint(Color.gray);
-                else g2D.setPaint(Color.white);
+                if (wall > 0) g2D.setPaint(Color.darkGray);
+                else g2D.setPaint(Color.lightGray);
 
-                int wallposx = transformToMinimapX(wallx);
-                int wallposy = transformToMinimapY(wally);
+                int wallposx = transformToMinimapX(wallx) + 3;
+                int wallposy = transformToMinimapY(wally) + 3;
                 int wallwidth = (int) (this.s);
                 int wallheight = (int) (this.s);
 
