@@ -7,8 +7,10 @@ import javax.swing.JPanel;
 import com.DoomClone.states.Stage;
 import java.awt.Toolkit;
 import java.io.FileReader;
+import java.io.File;
 
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class Render3D extends JPanel {
@@ -22,6 +24,7 @@ public class Render3D extends JPanel {
     int texWidth = 32;
     int texHeight = 32;
     int[][] texture;
+    JSONObject textureMap;
 
     int h;
     int toolbarHeight = 120;
@@ -36,19 +39,43 @@ public class Render3D extends JPanel {
         this.screenWidth = getWidth();
         this.screenHeight = getHeight();
 
-        // Generate Textures
-        // generate some textures
-        this.texture = new int[1][texWidth * texHeight + texWidth];
-
         JSONParser parser = new JSONParser();
 
         try {
-            JSONArray this_tex = (JSONArray) parser.parse(new FileReader("assets/blocks/books.rtx"));
+            // Read the texture map
+            textureMap = (JSONObject) parser.parse(new FileReader("assets/blocks/texture_map.json"));
 
-            Object[] ints = this_tex.toArray();
+            // Find the largest value
+            int largestValue = 0;
 
-            for (int i = 0; i < ints.length; i++) {
-                texture[0][i] = ((Long) ints[i]).intValue();
+            for (Object value : textureMap.values()) {
+                Long l = (Long) value;
+                int val = l.intValue();
+
+                if (val > largestValue){
+                    largestValue = val;
+                }
+
+            }
+            
+
+            this.texture = new int[largestValue][texWidth * texHeight + texWidth];
+
+            // Open blocks folder
+            File folder = new File("assets/blocks/");
+            File[] listOfFiles = folder.listFiles();
+
+            for (File file : listOfFiles) {
+                if (file.isFile() && !file.getName().equals("texture_map.json")) {
+                    // Read the files
+                    JSONArray this_tex = (JSONArray) parser.parse(new FileReader(file));
+
+                    Object[] ints = this_tex.toArray();
+
+                    for (int i = 0; i < ints.length; i++) {
+                        texture[0][i] = ((Long) ints[i]).intValue();
+                    }
+                }
             }
 
         } catch (Exception e) {
@@ -192,8 +219,8 @@ public class Render3D extends JPanel {
 
                 g2D.setColor(new Color(color));
                 g2D.fillRect(x * this.resolution, y * this.resolution, this.resolution, this.resolution);
-                g2D.fillRect(x * this.resolution, y * this.resolution - (lineHeight - 1) * this.resolution, this.resolution,
-                        this.resolution);
+                g2D.fillRect(x * this.resolution, y * this.resolution - (lineHeight - 1) * this.resolution,
+                        this.resolution, this.resolution);
             }
 
         }
