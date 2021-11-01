@@ -36,7 +36,7 @@ public class Render2D extends JPanel {
         //g2D.drawRect(0, 0, (int) (mapSize * s), (int) (mapSize * s));
 
         // DRAW WALLS
-        g2D.setPaint(Color.BLUE);
+        g2D.setPaint(Color.gray);
         g2D.setStroke(new BasicStroke(0));
 
         int wallx = 0;

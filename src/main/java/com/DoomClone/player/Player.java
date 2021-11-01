@@ -63,7 +63,6 @@ public class Player {
 
     public void createProjectile(){
         if (this.projectileCooldown == 0) {
-            System.out.println("Kapow!");
             this.projectile.create(this.x, this.y, this.rx, this.ry);
             projectileCooldown = maxProjectileCooldown;
         }
