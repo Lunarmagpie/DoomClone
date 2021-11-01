@@ -28,6 +28,7 @@ public class Render3D extends JPanel {
     JSONObject textureMap;
 
     int h;
+    int w;
     int toolbarHeight = 120;
     int resolution = 2;
     double planeX = 0, planeY = 0.75;
@@ -94,12 +95,13 @@ public class Render3D extends JPanel {
         this.screenWidth = getWidth();
         this.screenHeight = getHeight();
 
-        this.buffer = new int[screenWidth / resolution][screenHeight / resolution];
+        this.buffer = new int[screenHeight / resolution][screenWidth / resolution];
     }
 
     public void paint(Graphics g) {
-        screenWidth = (int) ((this.getWidth()) / resolution);
+        w = (int) (this.getWidth() / resolution);
         h = (int) ((this.getHeight() - this.toolbarHeight) / resolution);
+
         Toolkit.getDefaultToolkit().sync();
 
         // DRAW RAYS
@@ -115,18 +117,65 @@ public class Render3D extends JPanel {
         // Clear the buffer
         for (int x = 0; x < buffer.length; x++) {
             for (int y = 0; y < buffer[x].length; y++) {
-
-                if (y > this.screenHeight / 2) {
-                    buffer[x][y] = 10;
-                } else {
-                    buffer[x][y] = 0;
-                }
+                buffer[x][y] = 0;
             }
         }
 
-        for (int x = 0; x < screenWidth; x++) {
+        // FLOOR CASTING
+        for (int y = h/2; y < h; y++) {
+            // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
+            double rayDirX0 = dirX - planeX;
+            double rayDirY0 = dirY - planeY;
+            double rayDirX1 = dirX + planeX;
+            double rayDirY1 = dirY + planeY;
 
-            double cameraX = 2 * x / (double) screenWidth - 1; // x-coordinate in camera space
+            // Current y position compared to the center of the screen (the horizon)
+            int p = y - h / 2;
+
+            // Vertical position of the camera.
+            double posZ = 0.5 * h;
+
+            // Horizontal distance from the camera to the floor for the current row.
+            // 0.5 is the z position exactly in the middle between floor and ceiling.
+            double rowDistance = posZ / p;
+
+            // calculate the real world step vector we have to add for each x (parallel to
+            // camera plane)
+            // adding step by step avoids multiplications with a weight in the inner loop
+            double floorStepX = rowDistance * (rayDirX1 - rayDirX0) / w;
+            double floorStepY = rowDistance * (rayDirY1 - rayDirY0) / w;
+
+            // real world coordinates of the leftmost column. This will be updated as we
+            // step to the right.
+            double floorX = posX + rowDistance * rayDirX0;
+            double floorY = posY + rowDistance * rayDirY0;
+
+            for (int x = 0; x < w; ++x) {
+                // the cell coord is simply got from the integer parts of floorX and floorY
+                int cellX = (int) (floorX);
+                int cellY = (int) (floorY);
+
+                // get the texture coordinate from the fractional part
+                int tx = (int) (texWidth * (floorX - cellX)) & (texWidth - 1);
+                int ty = (int) (texHeight * (floorY - cellY)) & (texHeight - 1);
+
+                floorX += floorStepX;
+                floorY += floorStepY;
+
+                // choose texture and draw the pixel
+                int floorTexture = 0;
+                int color;
+
+                //Floor
+                color = texture[floorTexture][texWidth * ty + tx];
+                buffer[y][x] = color;
+            }
+        }
+
+        // WALL CASTING
+        for (int x = 0; x < w; x++) {
+
+            double cameraX = 2 * x / (double) w - 1; // x-coordinate in camera space
             double rayDirX = dirX + planeX * cameraX;
             double rayDirY = dirY + planeY * cameraX;
 
@@ -228,7 +277,7 @@ public class Render3D extends JPanel {
                 if (side == 1)
                     color = (color >> 1) & 0x7F7F7F;
 
-                buffer[x][y] = color;
+                buffer[y][x] = color;
 
                 if (y - lineHeight - 1 < 0) {
                     continue;
@@ -236,9 +285,9 @@ public class Render3D extends JPanel {
 
                 if (texY < 11) {
                     color = (color >> 1) & 0x7F7F7F;
-                    buffer[x][y - lineHeight - 1] = color;
+                    buffer[y - lineHeight - 1][x] = color;
                 } else {
-                    buffer[x][y - lineHeight - 1] = color;
+                    buffer[y - lineHeight - 1][x] = color;
                     color = (color >> 1) & 0x7F7F7F;
                 }
 
@@ -252,16 +301,15 @@ public class Render3D extends JPanel {
                 if (texY < 22)
                     color = (color >> 1) & 0x7F7F7F;
 
-                buffer[x][y - lineHeight * 2 - 2] = color;
+                buffer[y - lineHeight * 2 - 2][x] = color;
             }
 
         }
 
-        for (int x = 0; x < buffer.length; x++) {
-            for (int y = 0; y < buffer[x].length; y++) {
-                g.setColor(new Color(buffer[x][y]));
+        for (int y = 0; y < buffer.length; y++) {
+            for (int x = 0; x < buffer[y].length; x++) {
+                g.setColor(new Color(buffer[y][x]));
                 g.fillRect(x * this.resolution, y * this.resolution, this.resolution, this.resolution);
-
             }
         }
 
