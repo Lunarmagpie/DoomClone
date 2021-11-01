@@ -12,7 +12,6 @@ public class PlayerProjectile {
 
     public PlayerProjectile(Stage stage) {
         this.stage = stage;
-        System.out.println("Initialized");
     }
 
     public void tick() {

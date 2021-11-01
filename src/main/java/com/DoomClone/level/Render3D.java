@@ -34,7 +34,7 @@ public class Render3D extends JPanel {
     double planeX = 0, planeY = 0.75;
     double time = 0;
     double oldTime = 0;
-    Color floor = new Color(38, 25, 20);
+    int sky = 0x73494c;
 
     public Render3D(Stage stage) {
 
@@ -117,7 +117,7 @@ public class Render3D extends JPanel {
         // Clear the buffer
         for (int x = 0; x < buffer.length; x++) {
             for (int y = 0; y < buffer[x].length; y++) {
-                buffer[x][y] = 0;
+                buffer[x][y] = this.sky;
             }
         }
 
@@ -310,7 +310,7 @@ public class Render3D extends JPanel {
             for (int x = 0; x < buffer[y].length; x++) {
                 g.setColor(new Color(buffer[y][x]));
                 g.fillRect(x * this.resolution, y * this.resolution, this.resolution, this.resolution);
-            }
+            }        
         }
 
         // PAINT UI COMPONENTS
