@@ -205,8 +205,8 @@ public class Render3D extends JPanel {
             double sideDistX;
             double sideDistY;
 
-            double deltaDistX = (rayDirX == 0) ? 1e30 : Math.abs(1 / rayDirX);
-            double deltaDistY = (rayDirY == 0) ? 1e30 : Math.abs(1 / rayDirY);
+            double deltaDistX = (rayDirX == 0) ? Double.POSITIVE_INFINITY : Math.abs(1 / rayDirX);
+            double deltaDistY = (rayDirY == 0) ? Double.POSITIVE_INFINITY : Math.abs(1 / rayDirY);
 
             double perpWallDist;
 
