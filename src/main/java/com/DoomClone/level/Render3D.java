@@ -4,14 +4,18 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
+
+import com.DoomClone.entities.Sprite;
 import com.DoomClone.states.Stage;
 import java.awt.Toolkit;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.File;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class Render3D extends JPanel {
 
@@ -24,7 +28,9 @@ public class Render3D extends JPanel {
     int texWidth = 32;
     int texHeight = 32;
     int[][] buffer;
-    int[][] texture;
+    int[][] block_textures;
+    int[][] sprite_textures;
+
     JSONObject textureMap;
 
     int h;
@@ -40,50 +46,55 @@ public class Render3D extends JPanel {
 
         this.stage = stage;
 
-        JSONParser parser = new JSONParser();
-
         try {
-            // Read the texture map
-            textureMap = (JSONObject) parser.parse(new FileReader("assets/blocks/texture_map.json"));
-
-            // Find the largest value
-            int largestValue = 0;
-
-            for (Object value : textureMap.values()) {
-                Long l = (Long) value;
-                int val = l.intValue();
-
-                if (val > largestValue) {
-                    largestValue = val;
-                }
-
-            }
-
-            this.texture = new int[largestValue][texWidth * texHeight + texWidth];
-
-            // Open blocks folder
-            File folder = new File("assets/blocks/");
-            File[] listOfFiles = folder.listFiles();
-
-            for (File file : listOfFiles) {
-                if (file.isFile() && file.getName().endsWith(".rtx")) {
-                    // Read the files
-                    JSONArray this_tex = (JSONArray) parser.parse(new FileReader(file));
-
-                    Object[] ints = this_tex.toArray();
-                    Long index = (Long) textureMap.get(file.getName().split("\\.")[0]);
-
-                    for (int i = 0; i < ints.length; i++) {
-                        texture[index.intValue() - 1][i] = ((Long) ints[i]).intValue();
-                    }
-                }
-            }
-
+            this.block_textures = openTexture("blocks");
+            this.sprite_textures = openTexture("entities");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         minimap = new Render2D(stage);
+    }
+
+    public int[][] openTexture(String folder) throws IOException, ParseException {
+        // Read the texture map
+        JSONParser parser = new JSONParser();
+        textureMap = (JSONObject) parser.parse(new FileReader("assets/" + folder + "/texture_map.json"));
+
+        // Find the largest value
+        int largestValue = 0;
+
+        for (Object value : textureMap.values()) {
+            Long l = (Long) value;
+            int val = l.intValue();
+
+            if (val > largestValue) {
+                largestValue = val;
+            }
+
+        }
+
+        int[][] texture = new int[largestValue][texWidth * texHeight + texWidth];
+
+        // Open blocks folder
+        File folder_file = new File("assets/" + folder + "/");
+        File[] listOfFiles = folder_file.listFiles();
+
+        for (File file : listOfFiles) {
+            if (file.isFile() && file.getName().endsWith(".rtx")) {
+                // Read the files
+                JSONArray this_tex = (JSONArray) parser.parse(new FileReader(file));
+
+                Object[] ints = this_tex.toArray();
+                Long index = (Long) textureMap.get(file.getName().split("\\.")[0]);
+
+                for (int i = 0; i < ints.length; i++) {
+                    texture[index.intValue() - 1][i] = ((Long) ints[i]).intValue();
+                }
+            }
+        }
+
+        return texture;
     }
 
     public void rotate(double theta) {
@@ -141,6 +152,8 @@ public class Render3D extends JPanel {
             }
         }
 
+        double zbuffer[] = new double[w];
+
         // FLOOR CASTING
         for (int y = h / 2; y < h; y++) {
             // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
@@ -187,7 +200,7 @@ public class Render3D extends JPanel {
                 int color;
 
                 // Floor
-                color = texture[floorTexture][texWidth * ty + tx];
+                color = block_textures[floorTexture][texWidth * ty + tx];
                 buffer[y][x] = color;
             }
         }
@@ -291,14 +304,15 @@ public class Render3D extends JPanel {
                 // of overflow
                 int texY = (int) texPos & (texHeight - 1);
                 texPos += step;
-                int color = texture[texNum][texHeight * texY + texX];
+                int color = block_textures[texNum][texHeight * texY + texX];
                 // make color darker for y-sides: R, G and B byte each divided through two with
                 // a "shift" and an "and"
                 if (side == 1)
                     color = (color >> 1) & 0x7F7F7F;
 
                 // blend the color with the sky color based on distance
-                if (step > 1) color  = blend(color, this.sky, 1 / step);
+                if (step > 1)
+                    color = blend(color, this.sky, 1 / step);
 
                 buffer[y][x] = color;
 
@@ -318,6 +332,92 @@ public class Render3D extends JPanel {
                 buffer[y - lineHeight * 2 + 2][x] = blended;
             }
 
+            zbuffer[x] = perpWallDist;
+
+            // SPRITE CASTING
+            // sort sprites from far to close
+            Sprite[] sprites = this.stage.entities.toArray(new Sprite[0]);
+
+            for (int i = 0; i < sprites.length; i++) {
+                for (int j = i; j < sprites.length; j++) {
+                    double first_dist = ((posX - sprites[i].x) * (posX - sprites[i].x)
+                            + (posY - sprites[i].y) * (posY - sprites[i].y));
+                    double this_dist = ((posX - sprites[j].x) * (posX - sprites[j].x)
+                            + (posY - sprites[j].y) * (posY - sprites[j].y));
+
+                    if (this_dist > first_dist) {
+                        Sprite tmp = sprites[i];
+                        sprites[i] = sprites[j];
+                        sprites[j] = tmp;
+                    }
+                }
+            }
+
+            // after sorting the sprites, do the projection and draw them
+            for (Sprite sprite : sprites) {
+                // translate sprite position to relative to camera
+                double spriteX = sprite.x - posX;
+                double spriteY = sprite.y - posY;
+
+                // transform sprite with the inverse camera matrix
+                // [ planeX dirX ] -1 [ dirY -dirX ]
+                // [ ] = 1/(planeX*dirY-dirX*planeY) * [ ]
+                // [ planeY dirY ] [ -planeY planeX ]
+
+                double invDet = 1.0 / (planeX * dirY - dirX * planeY); // required for correct matrix multiplication
+
+                double transformX = invDet * (dirY * spriteX - dirX * spriteY);
+                double transformY = invDet * (-planeY * spriteX + planeX * spriteY); // this is actually the depth
+                                                                                     // inside the screen, that what Z
+                                                                                     // is in 3D
+
+                int spriteScreenX = (int) ((w / 2) * (1 + transformX / transformY));
+
+                // calculate height of the sprite on screen
+                int spriteHeight = Math.abs((int) (h / (transformY))); // using 'transformY' instead of the real
+                                                                       // distance prevents fisheye
+                // calculate lowest and highest pixel to fill in current stripe
+                int drawStartY = -spriteHeight / 2 + h / 2;
+                if (drawStartY < 0)
+                    drawStartY = 0;
+                int drawEndY = spriteHeight / 2 + h / 2;
+                if (drawEndY >= h)
+                    drawEndY = h - 1;
+
+                // calculate width of the sprite
+                int spriteWidth = Math.abs((int) (h / (transformY)));
+                int drawStartX = -spriteWidth / 2 + spriteScreenX;
+                if (drawStartX < 0)
+                    drawStartX = 0;
+                int drawEndX = spriteWidth / 2 + spriteScreenX;
+                if (drawEndX >= w)
+                    drawEndX = w - 1;
+
+                // loop through every vertical stripe of the sprite on screen
+                for (int stripe = drawStartX; stripe < drawEndX; stripe++) {
+                    int spriteTexX = (int) (256 * (stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth
+                            / spriteWidth) / 256;
+                    // the conditions in the if are:
+                    // 1) it's in front of camera plane so you don't see things behind you
+                    // 2) it's on the screen (left)
+                    // 3) it's on the screen (right)
+                    // 4) ZBuffer, with perpendicular distance
+                    if (transformY > 0 && stripe > 0 && stripe < w && transformY < zbuffer[stripe])
+                        for (int y = drawStartY; y < drawEndY; y++) // for every pixel of the current stripe
+                        {
+                            int d = (y) * 256 - h * 128 + spriteHeight * 128; // 256 and 128 factors to avoid floats
+                            int texY = ((d * texHeight) / spriteHeight) / 256;
+                            int color = this.sprite_textures[sprite.texture][texWidth * texY + spriteTexX]; // get
+                                                                                                            // current
+                                                                                                            // color
+                                                                                                            // from the
+                                                                                                            // texture
+                            if ((color & 0x00FFFFFF) != 0)
+                                buffer[y][stripe] = color; // paint pixel if it isn't black, black is the invisible
+                                                           // color
+                        }
+                }
+            }
         }
 
         for (int y = 0; y < buffer.length; y++) {
