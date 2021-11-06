@@ -1,5 +1,5 @@
 package com.DoomClone.entities;
 
-public class EnemyABC extends EntityABC {
+public class EnemyABC extends Sprite {
     
 }

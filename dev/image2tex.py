@@ -28,7 +28,7 @@ def main():
             r, g, b, a = img_colors[x, y]
             output[width * y + x] = (r << 16) + (g << 8) + b
 
-    with open(f"assets/{image_path.split('.')[-2]}.rtx", "w") as file:
+    with open(f"{image_path.split('.')[-2]}.rtx", "w") as file:
         file.write(json.dumps(output))
 
 

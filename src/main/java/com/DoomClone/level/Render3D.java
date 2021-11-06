@@ -66,7 +66,7 @@ public class Render3D extends JPanel {
             File[] listOfFiles = folder.listFiles();
 
             for (File file : listOfFiles) {
-                if (file.isFile() && !file.getName().equals("texture_map.json")) {
+                if (file.isFile() && file.getName().endsWith(".rtx")) {
                     // Read the files
                     JSONArray this_tex = (JSONArray) parser.parse(new FileReader(file));
 

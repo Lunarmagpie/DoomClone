@@ -1,6 +1,8 @@
 package com.DoomClone.states;
 
 import javax.swing.JFrame;
+
+import com.DoomClone.entities.Sprite;
 import com.DoomClone.level.Render2D;
 import com.DoomClone.level.Render3D;
 import java.awt.event.KeyEvent;
@@ -38,6 +40,8 @@ public class Stage extends StateABC {
             { 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1 },
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 },
             { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
+
+    public ArrayList<Sprite> entities = new ArrayList<Sprite>();
 
     public Stage() {
         this.player = new com.DoomClone.player.Player(this);
