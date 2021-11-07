@@ -411,10 +411,8 @@ public class Render3D extends JPanel {
                                                                                                             // current
                                                                                                             // color
                                                                                                             // from the
-                                                                                                            // texture
-                            if ((color & 0x00FFFFFF) != 0)
-                                buffer[y][stripe] = color; // paint pixel if it isn't black, black is the invisible
-                                                           // color
+                                                                                                            // textur
+                            buffer[y][stripe] = color;
                         }
                 }
             }

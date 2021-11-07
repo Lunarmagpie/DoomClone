@@ -42,5 +42,7 @@ public class PlayerProjectile {
     public void create(double x, double y, double rx, double ry) {
         double[] res = {x, y, rx, ry, 0};
         this.obj.add(res);
+
+        this.stage.entities.add(new Entity(x, y, 1));
     }
 }
